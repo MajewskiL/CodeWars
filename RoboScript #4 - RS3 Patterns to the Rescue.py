@@ -1,3 +1,4 @@
+#https://www.codewars.com/kata/594b898169c1d644f900002e
 import re
 
 def defrag(txt,funkcja={}):
