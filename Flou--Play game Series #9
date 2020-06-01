@@ -1,0 +1,48 @@
+#https://www.codewars.com/kata/5a93754d0025e98fde000048
+def licz(gm,wynik=""):
+    for x in range(1,len(gm)-1): wynik+="".join(gm[x][1:len(gm[0])-1])
+    return (True if wynik.count(".")==0 else False)
+
+def move(gm,start,jak):
+    gdzie,stop=[[0,1,"Right"],[1,0,"Down"],[0,-1,"Left"],[-1,0,"Up"]],0
+    co=start.copy()
+    while stop!=2:
+        k1,k2=co[0]+gdzie[jak%4][0],co[1]+gdzie[jak%4][1]
+        if gm[k1][k2]==".":
+            co[0]+=gdzie[jak%4][0]
+            co[1]+=gdzie[jak%4][1]
+            gm[co[0]]=gm[co[0]][:co[1]]+"b"+gm[co[0]][co[1]+1:]
+            stop=0
+        else: jak,stop=jak+1,stop+1
+    return (gm)
+
+def ruch(gm,wsad,wyn,dlg):
+    gdzie=[[0,1,"Right"],[1,0,"Down"],[0,-1,"Left"],[-1,0,"Up"]]
+    for x in range(len(wsad)):
+        gm_kierunek=gm[:]
+        for y in gdzie:
+            k1,k2=wsad[x][0]+y[0],wsad[x][1]+y[1]
+            if gm[k1][k2]=="." and len(wyn)!=dlg:
+                wsad[x][2]=y[2]
+                wyn.append([wsad[x][0]-1,wsad[x][1]-1,wsad[x][2]])
+                gm=move(gm,wsad[x],gdzie.index(y))
+                if (len(wsad))>0:
+                    wyn=ruch(gm,wsad[:x]+wsad[x+1:],wyn,dlg)
+                    if wyn!=[] and wyn[0]=="Wra": return wyn
+                    if len(wyn)==dlg and licz(gm):
+                        wyn.insert(0,"Wra")
+                        return wyn
+                gm=gm_kierunek[:]
+                wyn=wyn[:len(wyn)-1]
+    return wyn
+
+
+def play_flou(game_map):
+    wyn=[]
+    game_map=game_map.split()
+    for x in range(len(game_map)):
+        for y in range(len(game_map[x])):
+            if game_map[x][y].isalpha(): wyn.append([x,y,""])
+    tst=ruch(game_map,wyn,[],len(wyn))
+    if len(tst)-1!=len(wyn): return False
+    return tst[1:]
