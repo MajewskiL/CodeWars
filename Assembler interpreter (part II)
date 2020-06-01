@@ -1,0 +1,43 @@
+#https://www.codewars.com/kata/58e61f3d8ff24f774400002c
+def assembler_interpreter(p):
+    p=p.splitlines()
+    pos,dlg,reg,lab,back,jmp,cmp=0,len(p),{},{},[],0,[0]*2
+    for x in range(dlg):
+        if "msg " not in p[x]: 
+            p[x]=p[x].split()
+            if len(p[x])==0: p[x]=[";"]
+            if p[x][0][-1:]==":": lab[p[x][0][:-1]]=x
+    while p[pos][0]!="end":
+        if "msg" in p[pos]:
+            zwrot,wynik,licz="",False,False
+            p[pos]=p[pos].replace("msg ","")
+            for y in range(len(p[pos])):
+                if p[pos][y]=="'" and licz==False: licz=True
+                elif p[pos][y]=="'" and licz: licz=False
+                elif licz==True: zwrot+=p[pos][y]
+                elif p[pos][y] in reg: zwrot,wynik=zwrot+str(reg[p[pos][y]]),True
+                elif p[pos][y]==";": break
+            if wynik:return(zwrot)
+            else: return(-1)
+        if len(p[pos])>1 and p[pos][1][-1:]==",":p[pos][1]=p[pos][1][:-1]
+        if p[pos][0]=="mov": reg[p[pos][1]]=reg[p[pos][2]] if p[pos][2] in reg else int(p[pos][2])
+        elif "dec" in p[pos]: reg[p[pos][1]]-=1
+        elif "inc" in p[pos]: reg[p[pos][1]]+=1
+        elif "add" in p[pos]: reg[p[pos][1]]+=reg[p[pos][2]] if p[pos][2] in reg else int(p[pos][2])
+        elif "sub" in p[pos]: reg[p[pos][1]]-=reg[p[pos][2]] if p[pos][2] in reg else int(p[pos][2])
+        elif "mul" in p[pos]: reg[p[pos][1]]*=reg[p[pos][2]] if p[pos][2] in reg else int(p[pos][2])
+        elif "div" in p[pos]: reg[p[pos][1]]=int(reg[p[pos][1]]/(reg[p[pos][2]] if p[pos][2] in reg else int(p[pos][2])))
+        elif "ret" in p[pos]: pos,back=back[len(back)-1],back[:-1]
+        elif "cmp" in p[pos]: cmp[0],cmp[1]=reg[p[pos][1]] if p[pos][1] in reg else int(p[pos][1]),reg[p[pos][2]] if p[pos][2] in reg else int(p[pos][2])
+        elif "jne" in p[pos] and cmp[0]!=cmp[1]: pos=lab[p[pos][1]]
+        elif "je" in p[pos] and cmp[0]==cmp[1]: pos=lab[p[pos][1]]
+        elif "jge" in p[pos] and cmp[0]>=cmp[1]: pos=lab[p[pos][1]]
+        elif "jg" in p[pos] and cmp[0]>cmp[1]: pos=lab[p[pos][1]]
+        elif "jle" in p[pos] and cmp[0]<=cmp[1]: pos=lab[p[pos][1]]
+        elif "jl" in p[pos] and cmp[0]<cmp[1]: pos=lab[p[pos][1]]
+        elif "call" in p[pos]:
+            back.append(pos)
+            pos=lab[p[pos][1]]
+        elif "jmp" in p[pos]: pos=lab[p[pos][1]]
+        pos+=1
+    return reg
