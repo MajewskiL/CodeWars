@@ -1,0 +1,27 @@
+https://www.codewars.com/kata/546d15cebed2e10334000ed9
+
+import re
+
+
+def solve_runes(runes):
+    p = (r'(-?[0-9?]+)([-+*])(-?[0-9?]+)=(-?[0-9?]+)')
+    data, ans = [], []
+    a = re.match(p, runes)
+    data = [a.group(x) for x in range(1,5)]
+    for x in range(10):
+        tmp = data.copy()
+        if x == 0:
+            if any([len(tmp[0]) > 1 and tmp[0][0] == "?", len(tmp[2]) > 1 and tmp[2][0] == "?", len(tmp[3]) > 1 and tmp[3][0] == "?",]) :
+                continue
+        for y in range(4):
+            tmp[y] = re.sub(r'[\?]', str(x), tmp[y])
+        if tmp[1] == "+":
+            left = int(tmp[0]) + int(tmp[2])
+        elif tmp[1] == "-":
+            left = int(tmp[0]) - int(tmp[2])
+        elif tmp[1] == "*":
+            left = int(tmp[0]) * int(tmp[2])
+        #print(left, int(tmp[3]))
+        if left == int(tmp[3]) and all([True if str(x) not in z else False for z in data]):
+            ans.append(x)
+    return sorted(ans)[0] if len(ans) != 0 else -1
