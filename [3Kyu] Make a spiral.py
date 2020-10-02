@@ -1,4 +1,4 @@
-#https://www.codewars.com/users/Spalding/completed_solutions
+#https://www.codewars.com/kata/534e01fbbb17187c7e0000c6/solutions/python
 def spiralize(size):
     spiral=[[0 for x in range(size)] for x in range(size)]
     x,y,w,iter=0,-1,0,0
