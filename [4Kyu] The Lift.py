@@ -1,4 +1,4 @@
-#https://www.codewars.com/users/Spalding/completed_solutions
+#https://www.codewars.com/kata/58905bfa1decb981da00009e
 class Dinglemouse(object):
 
     def __init__(self, queues, capacity):
