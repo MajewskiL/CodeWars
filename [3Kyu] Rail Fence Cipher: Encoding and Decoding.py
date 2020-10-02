@@ -1,18 +1,20 @@
 #https://www.codewars.com/kata/58c5577d61aefcf3ff000081
-def rozkmin (string,n):
-    l=[[] for i in range(n)]
-    x=0
-    s=1
+def rozkmin (string, n):
+    l = [[] for i in range(n)]
+    x = 0
+    s = 1
     for a in range(len(string)):
         l[x].append(string[a])
-        if s==1:x=x+1
-        else: x=x-1
-        if x==n:
-            x=n-2
-            s=0
-        if x<0:
-            x=1
-            s=1
+        if s == 1:
+            x = x + 1
+        else: 
+            x = x - 1
+        if x == n:
+            x = n - 2
+            s = 0
+        if x < 0:
+            x = 1
+            s = 1
     return(l)
 
 def encode_rail_fence_cipher(string, n):
